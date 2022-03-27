@@ -2,20 +2,20 @@ import osmnx as ox
 import networkx as nx
 import numpy as np
 from roc_bike_growth.settings import CONFIG
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPolygon
 from typing import List, Union
 
 
 def download_POIs(
-    polygon: Polygon, custom_filters: dict = CONFIG.osm_poi_params
+    polygon: Union[Polygon, MultiPolygon], custom_filters: dict = CONFIG.osm_poi_params
 ) -> dict:
     """
     Queries overpass for nodes in polygon with matching filters and returns json response.
 
     Parameters
     -------
-    polygon: Polygon
-        Shapely Polygon object to use as query boundary.
+    polygon: Polygon | MultiPolygon
+        Shapely Polygon or MultiPolygon object to use as query boundary.
     custom_filters: list
         list of custom filters for the nodes. E.x. '["amenity"="school"]'
 
@@ -28,13 +28,23 @@ def download_POIs(
     # format overpass query
     overpass_settings = ox.downloader._make_overpass_settings()
 
-    # convert polygon to Overpass poly string
-    polygon_str = ox.downloader._make_overpass_polygon_coord_strs(polygon)
+    # convert polygon to Overpass poly strings
+    overpass_polygon_strs = []
+    if isinstance(polygon, MultiPolygon): # Split apart MultiPolygon
+        for poly in polygon.geoms:
+            overpass_polygon_strs.append(ox.downloader._make_overpass_polygon_coord_strs(poly))
+    
+    elif isinstance(polygon, Polygon):
+        overpass_polygon_strs.append(ox.downloader._make_overpass_polygon_coord_strs(polygon))
+    
+    else:
+        raise TypeError(f'polygon geometry of type {type(polygon)} not accepted.')
 
     # Construct filters as strings
     components = []
-    for custom_filter in custom_filters.values():
-        components.append(f'node{custom_filter}(poly:"{polygon_str[0]}")')
+    for poly in overpass_polygon_strs:
+        for custom_filter in custom_filters.values():
+            components.append(f'node{custom_filter}(poly:"{poly[0]}")')
 
     # Do overpass query
     query = f"{overpass_settings};({';'.join(components)};>;);out;"
