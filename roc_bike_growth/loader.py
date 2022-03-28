@@ -81,8 +81,43 @@ def POI_graph_from_polygon(
     return ox.graph._create_graph([response], retain_all=True)
 
 
+def _fill_edge_geometry(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
+    """
+    Naive filling of empty edge geometries. For edge (u,v), creates LineString from u to v.
+
+    Adapted from https://github.com/gboeing/osmnx/blob/main/osmnx/utils_graph.py
+
+    Parameters
+    -------
+    G: nx.MultiDiGraph
+        graph
+
+    Returns
+    -------
+    G with edges geometries added in.
+    """
+    x_lookup = nx.get_node_attributes(G, "x")
+    y_lookup = nx.get_node_attributes(G, "y")
+    eattrs = {}
+    for u, v, k, data in G.edges(keys=True, data=True):
+        if data.get("geometry", None) is None:
+            geom = LineString(
+                (
+                    Point((x_lookup[u], y_lookup[u])),
+                    Point((x_lookup[v], y_lookup[v])),
+                )
+            )
+            eattrs[(u, v, k)] = {"geometry": geom}
+
+    nx.set_edge_attributes(G, eattrs)
+    return G
+
+
 def bike_infra_from_polygon(
-    polygon: Polygon, custom_filters: dict = CONFIG.osm_bike_params, compose_all=True
+    polygon: Polygon,
+    custom_filters: dict = CONFIG.osm_bike_params,
+    compose_all: bool = True,
+    fill_edge_geometry: bool = True,
 ) -> nx.MultiDiGraph:
     """
     Downloads network of bike-friendly paths
@@ -93,6 +128,8 @@ def bike_infra_from_polygon(
         Shapely Polygon object to use as query boundary.
     compose_all: bool = True
         If true, compose all into a signle graph
+    fill_edge_geometry: bool = True
+        Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
 
     Returns
     -------
@@ -100,7 +137,7 @@ def bike_infra_from_polygon(
     """
 
     graphs = []
-    for i, (name, params) in enumerate(custom_filters.items()):
+    for name, params in custom_filters.items():
         try:
             G = ox.graph_from_polygon(polygon, **params)
             nx.set_edge_attributes(G, name, "bike_infrastructure_type")
@@ -108,10 +145,20 @@ def bike_infra_from_polygon(
             graphs.append(G)
         except ox._errors.EmptyOverpassResponse:
             print(f"No OSM data for {name}")
+
     if compose_all:
-        return nx.compose_all(graphs)  # Returns a single graph
+        G = nx.compose_all(graphs)  # Returns a single graph
+        if fill_edge_geometry:
+            return _fill_edge_geometry(G)
+        else:
+            return G
     else:
-        return list(zip(custom_filters.keys(), graphs))
+        if fill_edge_geometry:
+            return list(
+                zip(custom_filters.keys(), [_fill_edge_geometry(g) for g in graphs])
+            )
+        else:
+            return list(zip(custom_filters.keys(), graphs))
 
 
 def carall_from_polygon(
@@ -156,22 +203,8 @@ def carall_from_polygon(
                 update_dict[node] = True
             nx.set_node_attributes(G, update_dict, name="poi")
 
-        # Modified from https://github.com/gboeing/osmnx/blob/main/osmnx/utils_graph.py
         if fill_edge_geometry:
-            x_lookup = nx.get_node_attributes(G, "x")
-            y_lookup = nx.get_node_attributes(G, "y")
-            eattrs = {}
-            for u, v, k, data in G.edges(keys=True, data=True):
-                if data.get("geometry", None) is None:
-                    geom = LineString(
-                        (
-                            Point((x_lookup[u], y_lookup[u])),
-                            Point((x_lookup[v], y_lookup[v])),
-                        )
-                    )
-                    eattrs[(u, v, k)] = {"geometry": geom}
-
-            nx.set_edge_attributes(G, eattrs)
+            G = _fill_edge_geometry(G)
 
         return G
 
