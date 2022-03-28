@@ -30,6 +30,10 @@ class CONFIG:
             "custom_filter": '["highway"~"path"]["bicycle"~"designated"]',
             "retain_all": True,
         },
+        "bike_sharedpath": {
+            "custom_filter": '["highway"~"path"]["bicycle"~"yes"]["surface"!~"ground"]',
+            "retain_all": True,
+        },
         "bike_cyclewayrighttrack": {
             "network_type": "bike",
             "custom_filter": '["cycleway:right"~"track"]',
