@@ -10,11 +10,6 @@ class CONFIG:
     osm_bike_params = {
         # Could add this one in later...
         #'car30': {'network_type':'drive', 'custom_filter':'["maxspeed"~"^30$|^20$|^15$|^10$|^5$|^30 mph|^25 mph|^20 mph|^15 mph|^10 mph|^5 mph"]', 'retain_all': True},
-        "bike_cyclewaylane": {
-            "network_type": "bike",
-            "custom_filter": '["cycleway"~"lane"]',
-            "retain_all": True,
-        },
         "bike_cyclewaytrack": {
             "network_type": "bike",
             "custom_filter": '["cycleway"~"track"]',
@@ -54,9 +49,9 @@ class CONFIG:
             "custom_filter": '["bicycle_road"]',
             "retain_all": True,
         },
-        "bike_sharrow": {
-            "network_type": "bike",
-            "custom_filter": '["cycleway"~"shared_lane"]',
+        "bike_boulevard": {
+            "network_type": "all",
+            "custom_filter": '["surface"!~"path"]["bicycle"~"designated"]',
             "retain_all": True,
         },
         "bike_livingstreet": {
@@ -78,3 +73,5 @@ class CONFIG:
         "attraction": '["tourism"="attraction"]',
         "museum": '["tourism"="museum"]',
     }
+
+    poi_filepath = "data/POIsRochester.csv"
