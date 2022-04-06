@@ -143,6 +143,7 @@ def bike_infra_from_polygon(
     custom_filters: dict = CONFIG.osm_bike_params,
     compose_all: bool = True,
     fill_edge_geometry: bool = True,
+    buffer_dist: float = 100,
 ) -> nx.MultiDiGraph:
     """
     Downloads network of bike-friendly paths
@@ -155,6 +156,8 @@ def bike_infra_from_polygon(
         If true, compose all into a signle graph
     fill_edge_geometry: bool = True
         Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
+    buffer_dist: float = 500
+        Buffer to pad the query polygon in meters
 
     Returns
     -------
@@ -163,9 +166,17 @@ def bike_infra_from_polygon(
 
     graphs = []
     names = []
+
+    if buffer_dist:
+        poly_proj, crs_utm = ox.projection.project_geometry(polygon)
+        poly_proj_buff = poly_proj.buffer(buffer_dist)
+        polygon, _ = ox.projection.project_geometry(
+            poly_proj_buff, crs=crs_utm, to_latlong=True
+        )
+
     for name, params in custom_filters.items():
         try:
-            G = ox.graph_from_polygon(polygon, **params)
+            G = ox.graph_from_polygon(polygon, truncate_by_edge=True, **params)
             nx.set_edge_attributes(G, name, "bike_infrastructure_type")
             graphs.append(G)
             names.append(name)
