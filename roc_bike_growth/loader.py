@@ -156,7 +156,7 @@ def bike_infra_from_polygon(
         If true, compose all into a signle graph
     fill_edge_geometry: bool = True
         Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
-    buffer_dist: float = 500
+    buffer_dist: float = 100
         Buffer to pad the query polygon in meters
 
     Returns
