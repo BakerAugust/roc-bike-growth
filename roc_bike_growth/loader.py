@@ -1,13 +1,14 @@
 import osmnx as ox
 import networkx as nx
 import numpy as np
+import geopandas as gpd
 from roc_bike_growth.settings import CONFIG
 from shapely.geometry import Polygon, MultiPolygon, LineString, Point
 
 from typing import List, Union
 
 
-def download_POIs(
+def download_osm_POIs(
     polygon: Union[Polygon, MultiPolygon], custom_filters: dict = CONFIG.osm_poi_params
 ) -> dict:
     """
@@ -75,10 +76,34 @@ def POI_graph_from_polygon(
     nx.MultiDiGraph
     """
 
-    response = download_POIs(polygon, custom_filters)
+    response = download_osm_POIs(polygon, custom_filters)
 
     # convert to graph representation and return
     return ox.graph._create_graph([response], retain_all=True)
+
+
+def POIs_from_file(filepath: str) -> gpd.GeoDataFrame:
+    """
+    Loads pois from file and convert projection.
+    """
+    gdf = gpd.read_file(filepath)
+
+    def address2point(address: str) -> Point:
+        """
+        Geocodes address and converts to Point
+        """
+        try:
+            lat, lon = ox.geocoder.geocode(f"{address} rochester ny")
+        except Exception as e:
+            print(f"Exception at {address}. This point will be dropped:")
+            print(f" {e}")
+            return
+
+        return Point(lon, lat)
+
+    return gdf.assign(geometry=gdf["Address"].apply(address2point)).dropna(
+        subset=["geometry"]
+    )
 
 
 def _fill_edge_geometry(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
@@ -118,6 +143,7 @@ def bike_infra_from_polygon(
     custom_filters: dict = CONFIG.osm_bike_params,
     compose_all: bool = True,
     fill_edge_geometry: bool = True,
+    buffer_dist: float = 100,
 ) -> nx.MultiDiGraph:
     """
     Downloads network of bike-friendly paths
@@ -130,6 +156,8 @@ def bike_infra_from_polygon(
         If true, compose all into a signle graph
     fill_edge_geometry: bool = True
         Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
+    buffer_dist: float = 100
+        Buffer to pad the query polygon in meters
 
     Returns
     -------
@@ -137,15 +165,23 @@ def bike_infra_from_polygon(
     """
 
     graphs = []
+    names = []
+
+    if buffer_dist:
+        poly_proj, crs_utm = ox.projection.project_geometry(polygon)
+        poly_proj_buff = poly_proj.buffer(buffer_dist)
+        polygon, _ = ox.projection.project_geometry(
+            poly_proj_buff, crs=crs_utm, to_latlong=True
+        )
+
     for name, params in custom_filters.items():
         try:
-            G = ox.graph_from_polygon(polygon, **params)
+            G = ox.graph_from_polygon(polygon, truncate_by_edge=True, **params)
             nx.set_edge_attributes(G, name, "bike_infrastructure_type")
-
             graphs.append(G)
+            names.append(name)
         except ox._errors.EmptyOverpassResponse:
             print(f"No OSM data for {name}")
-
     if compose_all:
         G = nx.compose_all(graphs)  # Returns a single graph
         if fill_edge_geometry:
@@ -154,11 +190,9 @@ def bike_infra_from_polygon(
             return G
     else:
         if fill_edge_geometry:
-            return list(
-                zip(custom_filters.keys(), [_fill_edge_geometry(g) for g in graphs])
-            )
+            return list(zip(names, [_fill_edge_geometry(g) for g in graphs]))
         else:
-            return list(zip(custom_filters.keys(), graphs))
+            return list(zip(names, graphs))
 
 
 def carall_from_polygon(
@@ -173,7 +207,7 @@ def carall_from_polygon(
         Shapely Polygon object to use as query boundary.
 
     add_pois: bool = False
-        Flag to also tag nodes that are nearest to pois identified in `download_pois`.
+        Flag to also tag nodes that are nearest to pois identified in `download_osm_POIs`.
 
     fill_edge_geometry: bool = True
         Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
@@ -187,14 +221,22 @@ def carall_from_polygon(
         G = ox.graph_from_polygon(polygon, **CONFIG.osm_carall_params["carall"])
 
         if add_pois:
-            # Download to POIs
-            pois = download_POIs(polygon)
+            # Download osm POIs
+            pois = download_osm_POIs(polygon)
 
             # Find nearest node in G for each POI
             X, Y = [], []
             for node in pois["elements"]:
                 X.append(node["lon"])
                 Y.append(node["lat"])
+
+            # Add POIs from file
+            gdf = POIs_from_file(CONFIG.poi_filepath)
+            for _, row in gdf.iterrows():
+                x, y = row["geometry"].coords[0]
+                X.append(x)
+                Y.append(y)
+
             poi_nodes = np.unique(ox.distance.nearest_nodes(G, X=X, Y=Y))
 
             # Update those nodes to contain attribute 'poi'=True

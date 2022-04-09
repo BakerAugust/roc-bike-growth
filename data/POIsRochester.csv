@@ -1,0 +1,87 @@
+OBJECTID,Address,Occupancy,Business Type,Business Name,Corridor Name,Quadrant,x,y
+4492,1120 W RIDGE RD,Occupied,Auto,JR and Sons Auto Sales,W Ridge Rd,Northwest,1395434.129,1168854.523
+13239,961 West Ridge Rd,Occupied,Bar/Restaurant,Arby’s,W Ridge Rd,Northwest,1396472.151,1168449.692
+4549,640 W.RIDGE RD.,Occupied,Grocery/Food,Skip's On the Ridge,W Ridge Rd,Northwest,1398930.39,1168242.139
+5217,1776 Dewey Ave,Occupied,Bar/Restaurant,The Peppermill Restaurant ,W Ridge Rd,Northwest,1400229.995,1167342.608
+4433,368 W RIDGE RD,Occupied,Retail,Extreme Biker Leather,W Ridge Rd,Northwest,1400661.607,1167331.29
+3557,3260 LAKE AV,Occupied,Personal Services,Amador's Barber Lounge,Lake Ave,Northwest,1403310.362,1178166.229
+3721,4383 LAKE AV,Occupied,Retail,Cruise Rochester,Lake Ave,Northwest,1406392.425,1185964.441
+33259,"Port of Rochester, Lake Ave ",Occupied,Bar/Restaurant,California Rollin’ ll,Lake Ave,Northwest,1408352.703,1187811.003
+8245,1425 Portland Ave ,Occupied,Human Services,Rochester General Hospital,Portland Ave,Northeast,1414211.94,1164604.328
+10313,1325 Hudson Ave,Occupied,Personal Services,Rochester Polish Federal Credit Union & Dybowski Polish Market,Hudson Ave,Northeast,1410500.542,1163940.008
+10299,1100 Hudson Ave,Occupied,Retail,Andy's Candy,Hudson Ave,Northeast,1410758.255,1162262.784
+10276,972-974 Hudson Ave,Occupied,Religious,Amazing Grace Church,Hudson Ave,Northeast,1410867.812,1161289.365
+8227,1149-1151 Portland Ave ,Occupied,Grocery/Food,Lucky One Store,Portland Ave,Northeast,1414751.653,1162727.284
+8204,857 Portland  Ave ,Occupied,Grocery/Food,Amira Food Mart,Portland Ave,Northeast,1413973.827,1160845.557
+10393,1119 Joseph Ave,Occupied,Religious,Faith Chapel Apostolic Church,Joseph Ave,Northeast,1408240.427,1162356.314
+10380,900 Joseph Ave,Occupied,Grocery/Food,Joseph Market,Joseph Ave,Northeast,1408491.081,1160744.46
+5205,1195 N .Clinton ave ,Occupied,Grocery/Food,Borinquen Bakery ,N Clinton Ave,Northeast,1406835.779,1160628.28
+5225,"1456 N.Clinton Ave Rochester, NY",Occupied,Bar/Restaurant,Sobrinos Restaurant ,N Clinton Ave,Northeast,1406946.867,1162571.763
+5190,1102 N. Clinton Ave ,Occupied,Grocery/Food,Stop N Grab ,N Clinton Ave,Northeast,1407025.611,1159902.41
+5149,"774 N Clinton Ave Rochester , NY 14605",Occupied,Retail,Gusto Beauty Bar,N Clinton Ave,Northeast,1407323.096,1157474
+10251,694 Hudson Ave,Occupied,Religious,God Vision Ministries Inc,Hudson Ave,Northeast,1410961.176,1159195.172
+7803,614 Portland Ave ,Occupied,Bar/Restaurant,Kim Fish Market,Portland Ave,Northeast,1413284.604,1159160.508
+7301,477 Portland Ave ,Occupied,Retail,Fee Brothers Inc,Portland Ave,Northeast,1412689.235,1158321.908
+10216,360 Hudson Ave,Occupied,Religious,Church of Jesus Christ,Hudson Ave,Northeast,1410481.579,1156710.348
+10329,509 Joseph Ave,Occupied,Bar/Restaurant,Sooul Food Restaurant                ( take out),Joseph Ave,Northeast,1408512.832,1157784.761
+5162,915 N. Clinton Ave ,Occupied,Human Services,Salvation Army ,N Clinton Ave,Northeast,1406956.995,1158502.734
+5162,915 N. Clinton Ave ,Occupied,Human Services,Salvation Army ,N Clinton Ave,Northeast,1406956.995,1158502.734
+10204,226 Hudson Ave,Occupied,Human Services,R Community Bike Inc,Hudson Ave,Northeast,1410178.208,1155778.577
+4843,810-846 N GOODMAN ST,Occupied,Personal Services,Nails for You,N Goodman St,Southeast,1416332.935,1156387.584
+4853,509-511 N GOODMAN ST,Occupied,Religious,New Life Christian Worship,Public Market Area,Southeast,1415105.985,1154212.503
+4793,1115 E MAIN ST,Occupied,Retail,Khaos by Design,E Main St,Southeast,1415415.826,1153646.451
+4871,1404 E MAIN ST,Occupied,Other,Parking Lot,E Main St,Southeast,1417549.896,1153417.943
+21650,357 N. Goodman St.,Occupied,Personal Services,Ritual Salon,NOTABA,Southeast,1415515.155,1152501.548
+21659,276 N. Goodman St.,Occupied,Bar/Restaurant,Polizzi’s ,NOTABA,Southeast,1414670.226,1152537.247
+17606,1100 University Ave,Occupied,Other,The Great Escape Room,NOTABA,Southeast,1418096.551,1150453.175
+18436,696 University,Occupied,Bar/Restaurant,Matilda's,NOTABA,Southeast,1414943.26,1151456.901
+6308,650-672 E Main St,Occupied,Grocery/Food,Mini Mart & Fastrack Gas Station,E Main St,Northeast,1412050.924,1153003.062
+10201,195 Hudson Ave,Occupied,General Office,Crosby Browmlie Inc,Hudson Ave,Northeast,1409657.691,1155464.726
+4587,1122 Monroe Avenue,Occupied,Personal Services,Airbiz Cutz Barber & Beauty,Monroe Ave,Southeast,1416151.229,1145260.509
+4835,809 Monroe Ave.,Occupied,City Services,Monroe County Library,Monroe Ave,Southeast,1414204.977,1146574.429
+4775,636 Monroe Avenue,Occupied,Bar/Restaurant,J.D. Oxford's,Monroe Ave,Southeast,1413260.686,1147444.549
+4820,487 Monroe Avenue,Occupied,Bar/Restaurant,Mark's Texas Hots,Monroe Ave,Southeast,1412298.399,1148058.472
+4832,1038 S. CLINTON,Occupied,Bar/Restaurant,Ming's,S Clinton Ave,Southeast,1412183.475,1144981.232
+4983,820 S. CLINTON,Occupied,Bar/Restaurant,Swillburger,S Clinton Ave,Southeast,1411323.133,1146290.309
+4655,700 S. CLINTON,Occupied,Other,C.H. Morse Stamp Co.,S Clinton Ave,Southeast,1410687.763,1146997.105
+5033,497-499 S. CLINTON,Occupied,Other,,S Clinton Ave,Southeast,1409851.715,1148244.259
+4945,439 South,Occupied,Grocery/Food,Shop Smart,South Ave,Southeast,1409098.053,1148301.332
+4665,647 South,Occupied,Bar/Restaurant,Cheshire,South Ave,Southeast,1409439.366,1146669.47
+4811,742 South,Occupied,Bar/Restaurant,Little Venice Pizzeria,South Ave,Southeast,1409482.284,1145886.388
+4929,83 Howell St.,Occupied,Other,Rochester Fire,Monroe Ave,Southeast,1410212.129,1149631.477
+26059,1305 Mt. Hope,Occupied,Retail,Barnes & Noble,Mt Hope Ave,Southwest,1405932.184,1139825.936
+26069,1401 Mt. Hope Ave.,Occupied,Bar/Restaurant,Beer Market,Mt Hope Ave,Southwest,1405733.062,1139164.394
+18448,1500 Mt. Hope,Occupied,Bar/Restaurant,Dunkin Donuts,Mt Hope Ave,Southwest,1405748.391,1138585.515
+4979,1659 Mt. Hope,Occupied,Bar/Restaurant,Sultans Restaurant,Mt Hope Ave,Southwest,1405016.867,1137394.418
+5353,0960 Genesee St,Occupied,Bar/Restaurant,Wok,Genesee St,Southwest,1401226.778,1142376.117
+5327,0770 Genesee St,Occupied,Religious,Trinity MB Church,Genesee St,Southwest,1401201.141,1143667.481
+4977,669 Monroe Avenue,Occupied,Bar/Restaurant,Subway,Monroe Ave,Southeast,1413382.621,1147243.273
+7717,521 Thurston Rd,Occupied,Bar/Restaurant,Spyda Bar - Keys,Thurston Rd,Southwest,1397112.223,1143480.119
+7697,366 Thurston Rd,Occupied,Bar/Restaurant,It's All Love Restaurant,Thurston Rd,Southwest,1397198.545,1144640.69
+6419,565 Chili Ave,Occupied,Other,565 Chili Apartments,Chili Ave,Southwest,1396956.846,1147284.182
+6395,431 Chili Ave,Occupied,Grocery/Food,Last Stop Grocery & Deli LLC,Chili Ave,Southwest,1397866.291,1147725.921
+5299,0300 Genesee St,Occupied,Other,Heritage Park Properties,Genesee St,Southwest,1401158.663,1147077.429
+5278,0158 Genesee St,Occupied,Religious,Van Hanh Buddhist Meditation Ctr,Genesee St,Southwest,1401149.644,1148126.443
+7756,422 Jefferson Ave,Occupied,Grocery/Food,"Bronson Food, Inc",Jefferson Ave,Southwest,1402990.977,1147968.142
+7771,580 Jefferson Ave,Occupied,Grocery/Food,Zack Mini Mart,Jefferson Ave,Southwest,1403049.392,1146774.192
+9025,480 W Main St,Occupied,Grocery/Food,Hayaat Grocery,W Main St,Southwest,1403853.556,1150264.591
+9053,613 W Main St,Occupied,Grocery/Food,Super Star Groc.,W Main St,Southwest,1402924.711,1149839.844
+9037,526 W Main St,Occupied,Grocery/Food,Sun Fish Market,W Main St,Southwest,1403520.484,1150176.487
+9010,438 W Main St,Occupied,Retail,Sew Green,W Main St,Southwest,1404162.091,1150370.732
+3912,15 LYELL AV,Occupied,Other,PARKING LOT,Lake Ave,Northwest,1404248.343,1154488.914
+3934,192 LYELL AV,Occupied,Retail,Saratoga Pharmacy,Lyell Ave,Northwest,1402713.344,1154557.597
+3959,421 LYELL AV,Occupied,Auto,Galaxy Auto Sales,Lyell Ave,Northwest,1400781.587,1154397.851
+4165,505-507 LYELL AV,Occupied,Grocery/Food,Polo's Grocery Deli,Lyell Ave,Northwest,1399325.805,1154397.701
+3998,573 LYELL AV,Occupied,Bar/Restaurant,Dunkin Donuts,Lyell Ave,Northwest,1397902.535,1154384.834
+4011,1004 LYELL AV,Occupied,Grocery/Food,LNL Family Foods,Lyell Ave,Northwest,1397003.11,1154504.451
+3351,462 LAKE AV,Occupied,Grocery/Food,Lake Avenue Mini Mart,Lake Ave,Northwest,1402986.879,1157674.13
+4044,1354 LYELL AV,Occupied,Other,H & R Block,Lyell Ave,Northwest,1394298.751,1154620.575
+4076,1738 LYELL AV,Occupied,Other,PARKING LOT,Lyell Ave,Northwest,1391412.855,1154502.077
+3362,534 LAKE AV,Occupied,Bar/Restaurant,Lake Hots,Lake Ave,Northwest,1402804.094,1158195.267
+3387,817 LAKE AV,Occupied,Grocery/Food,Golden Lake Asian Foods,Lake Ave,Northwest,1402010.247,1160207.429
+3307,339 DRIVING PARK,Occupied,Grocery/Food,S & M Meat & Deli,Dewey Ave,Northwest,1400117.644,1160385.62
+15597,353 Dewey Ave,Occupied,Bar/Restaurant,Mins Chinese Restaurant ,Dewey Ave,Northwest,1400164.045,1159752.263
+3023,1312 DEWEY AV,Occupied,Retail,Angelex African Market,Dewey Ave,Northwest,1400249.421,1163900.524
+3072,1548 DEWEY AV,Occupied,Grocery/Food,Eli's Deli,Dewey Ave,Northwest,1400233.011,1165640.348
+3093,1687 DEWEY AV,Occupied,Grocery/Food,Albas Market,Dewey Ave,Northwest,1400034.254,1166784.364
+4527,468 W.RIDGE RD.,Occupied,Personal Services,Hair Studio,W Ridge Rd,Northwest,1400055.579,1167713.403

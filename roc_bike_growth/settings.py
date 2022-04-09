@@ -8,66 +8,29 @@ ox.utils.config(useful_tags_node=["amenity", "name", "shop", "tourism", "leisure
 @dataclass
 class CONFIG:
     osm_bike_params = {
-        # Could add this one in later...
-        #'car30': {'network_type':'drive', 'custom_filter':'["maxspeed"~"^30$|^20$|^15$|^10$|^5$|^30 mph|^25 mph|^20 mph|^15 mph|^10 mph|^5 mph"]', 'retain_all': True},
-        "bike_cyclewaylane": {
-            "network_type": "bike",
-            "custom_filter": '["cycleway"~"lane"]',
-            "retain_all": True,
-        },
-        "bike_cyclewaytrack": {
-            "network_type": "bike",
+        "bike_cyclewaytrack": {  # cycletrack
+            "network_type": "all",
             "custom_filter": '["cycleway"~"track"]',
             "retain_all": True,
         },
-        "bike_highwaycycleway": {
+        "bike_highwaycycleway": {  # trails
             "network_type": "all",
             "custom_filter": '["highway"~"cycleway"]',
             "retain_all": True,
         },
-        "bike_designatedpath": {
+        "bike_sharedpath": {  # more trails
+            "custom_filter": '["highway"~"path|footway"]["bicycle"~"yes|designated"]["surface"!~"ground|unpaved"]',
+            "retain_all": True,
+        },
+        "bike_boulevard": {  # bike boulevards
             "network_type": "all",
-            "custom_filter": '["highway"~"path"]["bicycle"~"designated"]',
-            "retain_all": True,
-        },
-        "bike_sharedpath": {
-            "custom_filter": '["highway"~"path"]["bicycle"~"yes"]["surface"!~"ground"]',
-            "retain_all": True,
-        },
-        "bike_cyclewayrighttrack": {
-            "network_type": "bike",
-            "custom_filter": '["cycleway:right"~"track"]',
-            "retain_all": True,
-        },
-        "bike_cyclewaylefttrack": {
-            "network_type": "bike",
-            "custom_filter": '["cycleway:left"~"track"]',
-            "retain_all": True,
-        },
-        "bike_cyclestreet": {
-            "network_type": "bike",
-            "custom_filter": '["cyclestreet"]',
-            "retain_all": True,
-        },
-        "bike_bicycleroad": {
-            "network_type": "bike",
-            "custom_filter": '["bicycle_road"]',
-            "retain_all": True,
-        },
-        "bike_sharrow": {
-            "network_type": "bike",
-            "custom_filter": '["cycleway"~"shared_lane"]',
-            "retain_all": True,
-        },
-        "bike_livingstreet": {
-            "network_type": "bike",
-            "custom_filter": '["highway"~"living_street"]',
+            "custom_filter": '["highway"!~"cycleway"]["surface"!~"path"]["bicycle"~"designated"]',
             "retain_all": True,
         },
     }
 
     osm_carall_params = {
-        "carall": {"network_type": "drive", "custom_filter": None, "retain_all": False}
+        "carall": {"network_type": "drive", "custom_filter": None, "retain_all": True}
     }
 
     osm_poi_params = {
@@ -78,3 +41,5 @@ class CONFIG:
         "attraction": '["tourism"="attraction"]',
         "museum": '["tourism"="museum"]',
     }
+
+    poi_filepath = "data/POIsRochester.csv"
