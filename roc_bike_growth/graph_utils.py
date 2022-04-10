@@ -4,7 +4,6 @@ from typing import List, Dict
 import igraph as ig
 
 
-
 def get_intersections(
     G: nx.MultiDiGraph, street_1_name: str, street_2_name: str
 ) -> List[int]:
@@ -151,6 +150,7 @@ def get_street_segment(
 
     return route
 
+
 def combine_nodes(
     dst: nx.MultiDiGraph,
     src: nx.MultiDiGraph,
@@ -192,16 +192,13 @@ def combine_nodes(
     return dst
 
 
-def combine_edges(
-    dst: nx.MultiDiGraph, 
-    src: nx.MultiDiGraph, 
-    debug = False):
-    
+def combine_edges(dst: nx.MultiDiGraph, src: nx.MultiDiGraph, debug=False):
+
     """
-    Adds the edges from one graph to another 
+    Adds the edges from one graph to another
     (assuming they have the edges only contain nodes that are in the dst graph)
-    
-    Parameters   
+
+    Parameters
     ------
     dst: MultiDiGraph
         Graph of network that edges are being added to
@@ -279,35 +276,6 @@ def ig_to_nx(G_ig: ig.Graph):
 
     return G_nx
 
-  
-def graph_union(G_1, G_2):
-        return [0, 0, 0, 0]
-    """
-    Graph of network whose edges are added to dst 
-        
-    Returns
-    ------
-    
-    dst: 
-        Graph dst with added edges from src
-    """
-    
-    
-    # Get the keys for the values between edges (would need to use multiple edges 
-    
-    src_edges = list(src.edges)
-    dst_edges = list(dst.edges)
-    
-    # Add edges not in dst to dst from src 
 
-    for edge in src_edges:
-        if(edge in dst_edges):
-            pass
-        else:
-            attr = dict(src[edge[0]][edge[1]][edge[2]])
-            dst.add_edge(edge[0],edge[1])
-            edge_attr = {edge: attr}
-            if(debug):
-                print(edge_a)
-            nx.set_edge_attributes(dst,edge_attr)
-    return dst
+def graph_union(G_1, G_2):
+    return [0, 0, 0, 0]
