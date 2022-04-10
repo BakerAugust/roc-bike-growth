@@ -102,6 +102,7 @@ def route_node_pairs(G, GT, route_factor):
         sp = set(
             G.get_shortest_paths(
                 poipair_ind[0], poipair_ind[1], weights="mod_weight", output="vpath"
+
             )[0]
         )
         GT_indices = GT_indices.union(sp)
@@ -164,7 +165,6 @@ def set_all_edge_attributes(G_src, G_dst, atr_name):
 
 # def greedy_triangulation_subgraph(G, pois_indices = [], pois_method = pass):
 def gt_from_scratch(G, pois_indices, route_factor=0, prune_factor=1):
-
     G_temp = copy.deepcopy(G)
     for e in G_temp.es:  # delete all edges
         G_temp.es.delete(e)
