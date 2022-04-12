@@ -9,7 +9,6 @@ import random
 import time
 import pickle as pk
 import roc_bike_growth.graph_utils as gu
-from tqdm.auto import tqdm
 
 # Algorithm the same as the one in their code with some unnessecary bits  removed.
 # Enumerates all of the connections between points of interest in graph and sums over their weights
@@ -94,13 +93,16 @@ def route_node_pairs(G, GT, route_factor):
     GT_indices = set()
 
     for e in G.es:
-        e['mod_weight'] = e['weight'] - e['weight']*route_factor*int(e['existing'] == True)
-    
+        e["mod_weight"] = e["weight"] - e["weight"] * route_factor * int(
+            e["existing"] == True
+        )
+
     for poipair, poipair_distance in routenodepairs:
         poipair_ind = (G.vs.find(id=poipair[0]).index, G.vs.find(id=poipair[1]).index)
         sp = set(
             G.get_shortest_paths(
-                poipair_ind[0], poipair_ind[1], weights='mod_weight', output="vpath"
+                poipair_ind[0], poipair_ind[1], weights="mod_weight", output="vpath"
+
             )[0]
         )
         GT_indices = GT_indices.union(sp)
@@ -151,18 +153,18 @@ def ccw(A, B, C):
 
 # craete a deepcopy of the original graph with no edges
 
-def set_all_edge_attributes(G_src,G_dst, atr_name):
+
+def set_all_edge_attributes(G_src, G_dst, atr_name):
     edges = list(G_src.edges)
     atr = {}
     for edge in edges:
-        atr[edge] =  True
+        atr[edge] = True
     nx.set_edge_attributes(G_dst, atr, atr_name)
     return G_dst
 
 
 # def greedy_triangulation_subgraph(G, pois_indices = [], pois_method = pass):
-def gt_from_scratch(G, pois_indices, route_factor =  0 , prune_factor=1):
-
+def gt_from_scratch(G, pois_indices, route_factor=0, prune_factor=1):
     G_temp = copy.deepcopy(G)
     for e in G_temp.es:  # delete all edges
         G_temp.es.delete(e)
@@ -173,28 +175,27 @@ def gt_from_scratch(G, pois_indices, route_factor =  0 , prune_factor=1):
     GT_final = route_node_pairs(G, GT, route_factor)
     return GT_final
 
-def gt_with_existing_full(G_base, G_existing, route_factor = 0, prune_factor = 1):
-    
-    
-    G_comb_nx = gu.combine_nodes(G_base,G_existing)
-    G_comb_nx = gu.combine_edges(G_comb_nx,G_existing)
 
-    G_comb_nx = set_all_edge_attributes(G_existing, G_comb_nx, 'existing')
-    
+def gt_with_existing_full(G_base, G_existing, route_factor=0, prune_factor=1):
+
+    G_comb_nx = gu.combine_nodes(G_base, G_existing)
+    G_comb_nx = gu.combine_edges(G_comb_nx, G_existing)
+
+    G_comb_nx = set_all_edge_attributes(G_existing, G_comb_nx, "existing")
+
     G_comb = ig.Graph.from_networkx(G_comb_nx)
 
-    for i,v in enumerate(G_comb.vs):
-        v['id'] = i
+    for i, v in enumerate(G_comb.vs):
+        v["id"] = i
     for e in G_comb.es:
-        e['weight'] = e['length']
-    pois_ids = [v_index for v_index,vertex in enumerate(G_comb.vs) if vertex['poi']]
+        e["weight"] = e["length"]
+    pois_ids = [v_index for v_index, vertex in enumerate(G_comb.vs) if vertex["poi"]]
     G_gen = gt_from_scratch(G_comb, pois_ids, route_factor, prune_factor)
     G_nx = gu.ig_to_nx(G_gen)
-    G_nx = gu.combine_nodes(G_nx,G_existing)
-    G_nx = gu.combine_edges(G_nx,G_existing)
-    
-    G_nx = set_all_edge_attributes(G_existing, G_nx, 'existing')
-    G_nx = set_all_edge_attributes(gu.ig_to_nx(G_gen), G_nx, 'generated')
-    
+    G_nx = gu.combine_nodes(G_nx, G_existing)
+    G_nx = gu.combine_edges(G_nx, G_existing)
+
+    G_nx = set_all_edge_attributes(G_existing, G_nx, "existing")
+    G_nx = set_all_edge_attributes(gu.ig_to_nx(G_gen), G_nx, "generated")
+
     return G_nx
-    

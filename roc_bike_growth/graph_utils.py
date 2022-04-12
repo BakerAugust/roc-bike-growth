@@ -150,136 +150,132 @@ def get_street_segment(
 
     return route
 
-def combine_nodes(    
-    dst: nx.MultiDiGraph, 
-    src: nx.MultiDiGraph, 
-    node_attributes = ['x','y','street_count'], 
-    debug = False):
-    
-    
-    ''' 
+
+def combine_nodes(
+    dst: nx.MultiDiGraph,
+    src: nx.MultiDiGraph,
+    node_attributes=["x", "y", "street_count"],
+    debug=False,
+):
+
+    """
     Adds the nodes from one graph to another.
-    
-    Parameters   
-    ------
+
+    Parameters
     dst: MultiDiGraph
         Graph of network that edges are being added to
     src: MultiDiGraph
-        Graph of network whose edges are added to dst 
-        
+        Graph of network whose edges are added to dst
+
     Returns
     ------
-    
-    dst: 
+
+    dst:
         Graph dst with added edges from src
-    '''
-    
-    # Get the keys for the nodes in both graphs 
-    
+    """
+
+    # Get the keys for the nodes in both graphs
+
     dst_nodes = list(dict(dst.nodes(data=True)).keys())
     src_nodes = list(dict(src.nodes(data=True)).keys())
-    
-    # Add the nodes from src not in dst to dst 
-    
+
+    # Add the nodes from src not in dst to dst
+
     for node in src_nodes:
-        if(node in dst_nodes):
+        if node in dst_nodes:
             pass
         else:
             dst.add_node(node)
             for a in node_attributes:
-                #set attributes
+                # set attributes
                 dst.nodes[node][a] = src.nodes[node][a]
     return dst
 
-def combine_edges(
-    dst: nx.MultiDiGraph, 
-    src: nx.MultiDiGraph, 
-    debug = False):
-    
-    ''' 
-    Adds the edges from one graph to another 
+
+def combine_edges(dst: nx.MultiDiGraph, src: nx.MultiDiGraph, debug=False):
+
+    """
+    Adds the edges from one graph to another
     (assuming they have the edges only contain nodes that are in the dst graph)
-    
-    Parameters   
+
+    Parameters
     ------
     dst: MultiDiGraph
         Graph of network that edges are being added to
     src: MultiDiGraph
-        Graph of network whose edges are added to dst 
-        
+        Graph of network whose edges are added to dst
+
     Returns
     ------
-    
-    dst: 
+
+    dst:
         Graph dst with added edges from src
-    '''
-    
-    
-    # Get the keys for the values between edges (would need to use multiple edges 
-    
+    """
+
+    # Get the keys for the values between edges (would need to use multiple edges
+
     src_edges = list(src.edges)
     dst_edges = list(dst.edges)
-    
-    # Add edges not in dst to dst from src 
+
+    # Add edges not in dst to dst from src
 
     for edge in src_edges:
-        if(edge in dst_edges):
+        if edge in dst_edges:
             pass
         else:
             attr = dict(src[edge[0]][edge[1]][edge[2]])
-            dst.add_edge(edge[0],edge[1])
+            dst.add_edge(edge[0], edge[1])
             edge_attr = {edge: attr}
-            if(debug):
+            if debug:
                 print(edge_a)
-            nx.set_edge_attributes(dst,edge_attr)
+            nx.set_edge_attributes(dst, edge_attr)
     return dst
 
-def ig_to_nx(
-    G_ig: ig.Graph
-    ):
-    
-    #Inits empty networkx MultiDiGraph
-    
+
+def ig_to_nx(G_ig: ig.Graph):
+
+    # Inits empty networkx MultiDiGraph
+
     G_nx = nx.MultiDiGraph()
-    
+
     for node in G_ig.vs:
-        #The networkx key values are called _nx_name in iGraph 
-        
-        key = node['_nx_name']
-        
-        #adds the node attributes of the iGraph node to new node in nx at key of node
-        
+        # The networkx key values are called _nx_name in iGraph
+
+        key = node["_nx_name"]
+
+        # adds the node attributes of the iGraph node to new node in nx at key of node
+
         G_nx.add_node(key)
         a = node.attributes()
-        del a['_nx_name']
+        del a["_nx_name"]
         attrs = {key: a}
-        
+
         nx.set_node_attributes(G_nx, attrs)
-        
+
     for edge in G_ig.es:
-        
-        #Get the keys of the edge in terms of nx keys
-        
+
+        # Get the keys of the edge in terms of nx keys
+
         src_i = edge.source
         trg_i = edge.target
-        src = G_ig.vs[src_i]['_nx_name']
-        trg = G_ig.vs[trg_i]['_nx_name']
-        
-        #add the edges to the nx graph with attributes
+        src = G_ig.vs[src_i]["_nx_name"]
+        trg = G_ig.vs[trg_i]["_nx_name"]
+
+        # add the edges to the nx graph with attributes
 
         G_nx.add_edge(src, trg)
         a = edge.attributes()
-        attrs = {(src,trg,0 ): a}
-        
-        nx.set_edge_attributes(G_nx,attrs)
+        attrs = {(src, trg, 0): a}
 
-    #Sets the graph attributes
-    
+        nx.set_edge_attributes(G_nx, attrs)
+
+    # Sets the graph attributes
+
     for a in G_ig.attributes():
-        
         G_nx.graph[a] = G_ig[a]
-    
+
     return G_nx
 
-    def graph_union(G_1, G_2):
-        return [0,0,0,0]
+
+def graph_union(G_1, G_2):
+    return [0, 0, 0, 0]
