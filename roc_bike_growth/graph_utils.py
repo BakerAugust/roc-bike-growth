@@ -1,6 +1,7 @@
 import osmnx as ox
 import networkx as nx
 from typing import List, Dict
+import igraph as ig
 
 
 def get_intersections(
@@ -234,7 +235,7 @@ def combine_edges(
     return dst
 
 def ig_to_nx(
-    G_ig: igraph.Graph
+    G_ig: ig.Graph
     ):
     
     #Inits empty networkx MultiDiGraph
@@ -279,3 +280,6 @@ def ig_to_nx(
         G_nx.graph[a] = G_ig[a]
     
     return G_nx
+
+    def graph_union(G_1, G_2):
+        return [0,0,0,0]
