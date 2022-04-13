@@ -3,6 +3,7 @@ import networkx as nx
 import numpy as np
 import geopandas as gpd
 from roc_bike_growth.settings import CONFIG
+from roc_bike_growth.graph_utils import get_street_segment
 from shapely.geometry import Polygon, MultiPolygon, LineString, Point
 
 from typing import List, Union
@@ -138,12 +139,42 @@ def _fill_edge_geometry(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
     return G
 
 
+def load_roc_in_progress() -> nx.MultiDiGraph:
+    """
+    Downloads rochester in-progress bike infrastructure graph.
+    """
+
+    segments = [  # street, src_intersection, dest_intersection
+        # East main project
+        ("east main street", "goodman street", "alexander street"),
+        
+        # North inner loop approximation
+        ("university avenue", "pitkin street", "north street"),
+        ("andrews street", "state street", "north street"),
+        ('state street', 'andrews street','church street'),
+        ('church street', 'state street','north plymouth avenue'),
+        ('north plymouth avenue','church street','allen street'),
+        ('allen street','north washington street','north plymouth avenue')
+    ]
+
+    # We could probably eliminate the need to download carall here by refactoring get_street_segment
+    carall = carall_from_polygon(ox.geocode_to_gdf("rochester, ny").geometry[0])
+    nodes = []
+    for street, src, dest in segments:
+        nodes += get_street_segment(carall, street, src, dest)
+
+    roc_in_progress = carall.subgraph(set(nodes)).copy()
+
+    return roc_in_progress
+
+
 def bike_infra_from_polygon(
     polygon: Polygon,
     custom_filters: dict = CONFIG.osm_bike_params,
     compose_all: bool = True,
     fill_edge_geometry: bool = True,
     buffer_dist: float = 100,
+    add_roc_in_progress: bool = True,
 ) -> nx.MultiDiGraph:
     """
     Downloads network of bike-friendly paths
@@ -158,6 +189,8 @@ def bike_infra_from_polygon(
         Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
     buffer_dist: float = 100
         Buffer to pad the query polygon in meters
+    add_roc_in_progress: bool = True
+        Manual addition of "in-progress" bike infrastructure in Rochester.
 
     Returns
     -------
@@ -182,6 +215,15 @@ def bike_infra_from_polygon(
             names.append(name)
         except ox._errors.EmptyOverpassResponse:
             print(f"No OSM data for {name}")
+
+    if add_roc_in_progress:
+        roc_in_progress = load_roc_in_progress()
+
+        # add to cycletrack
+        cycleway_idx = names.index("bike_cyclewaytrack")
+        cycleway_g = graphs[cycleway_idx]
+        graphs[cycleway_idx] = nx.compose_all([cycleway_g, roc_in_progress])
+
     if compose_all:
         G = nx.compose_all(graphs)  # Returns a single graph
         if fill_edge_geometry:
