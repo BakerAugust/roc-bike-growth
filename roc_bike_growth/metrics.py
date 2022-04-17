@@ -25,10 +25,6 @@ def graph_cohesion(G, coverage):
     n_components = cal_n_components(G)
     return coverage / (n_components**2 + 0.00001)
 
-def graph_coverage(G):
-    raise NotImplementedError
-    return 1.2
-
 def dist_vector(v1_list, v2_list):
     dist_list = haversine_vector(v1_list, v2_list, unit="m") # [(lat,lon)], [(lat,lon)]
     return dist_list
