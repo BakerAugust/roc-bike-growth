@@ -139,26 +139,32 @@ def _fill_edge_geometry(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
     return G
 
 
-def load_roc_in_progress() -> nx.MultiDiGraph:
+def load_roc_in_progress(carall: nx.MultiDiGraph = None) -> nx.MultiDiGraph:
     """
     Downloads rochester in-progress bike infrastructure graph.
+
+    Parameters
+    -------
+    carall: nx.MultiDiGraph
+        Rochester carall graph. Can be passed-in to avoid downloading again.
     """
 
     segments = [  # street, src_intersection, dest_intersection
         # East main project
         ("east main street", "goodman street", "alexander street"),
-        
         # North inner loop approximation
         ("university avenue", "pitkin street", "north street"),
         ("andrews street", "state street", "north street"),
-        ('state street', 'andrews street','church street'),
-        ('church street', 'state street','north plymouth avenue'),
-        ('north plymouth avenue','church street','allen street'),
-        ('allen street','north washington street','north plymouth avenue')
+        ("state street", "andrews street", "church street"),
+        ("church street", "state street", "north plymouth avenue"),
+        ("north plymouth avenue", "church street", "allen street"),
+        ("allen street", "north washington street", "north plymouth avenue"),
     ]
 
-    # We could probably eliminate the need to download carall here by refactoring get_street_segment
-    carall = carall_from_polygon(ox.geocode_to_gdf("rochester, ny").geometry[0])
+    # We could probably eliminate the need to download carall here by refactoring get_street_segment.
+    # Should probably just refactor this whole thing into a class...
+    if carall is None:
+        carall = carall_from_polygon(ox.geocode_to_gdf("rochester, ny").geometry[0])
     nodes = []
     for street, src, dest in segments:
         nodes += get_street_segment(carall, street, src, dest)
@@ -166,6 +172,69 @@ def load_roc_in_progress() -> nx.MultiDiGraph:
     roc_in_progress = carall.subgraph(set(nodes)).copy()
 
     return roc_in_progress
+
+
+def load_roc_proposed(
+    priority: int = 0, carall: nx.MultiDiGraph = None
+) -> nx.MultiDiGraph:
+    """
+    Downloads proposed rochester bike infrastructure graph based on the
+    2015 bikeable cities report.
+
+    Parameters
+    -------
+    priority: int = 0
+        Which priority of proposed bike infrastructure to load. Prioriy 1 loads
+        priority "i" from reoprt. Priority 2 loads "ii". All other values load
+        both. Default=0.
+    carall: nx.MultiDiGraph
+        Rochester carall graph. Can be passed-in to avoid downloading again.
+    """
+
+    # Priority i from bikeable cities report
+    segments_i = [  # street, src_intersection, dest_intersection
+        ("broad street", "smith street", "allen street"),
+        ("genesee street", "melrose street", "elmwood avenue"),
+        ("portland avenue", "north street", "central park"),
+        ("monroe avenue", "howell street", "alexander street"),
+        ("monroe avenue", "goodman street", "highland avenue"),
+    ]
+
+    # Priority ii from Bikeable cities report
+    segments_ii = [
+        ("south avenue", "mount hope", "elmwood avenue"),
+        ("lyell avenue", "lake avenue", "fairgate street"),
+        ("dewey avenue", "driving park avenue", "lyell avenue"),
+        # Broad street
+        ("east broad street", "chestnut street", "exchange"),
+        ("west broad street", "exchange", "west main street"),
+        ("west broad street", "west main street", "lyell avenue"),
+        ("west main street", "cascade drive", "brown street"),
+        ("driving park avenue", "argo park", "carthage dr"),
+        ("avenue e", "carthage dr", "conkey avenue"),
+        ("webster avenue", "garson avenue", "bay street"),
+        ("chestnut street", "monroe avenue", "east avenue"),
+        ("north chestnut street", "university avenue", "east avenue"),
+        ("joseph avenue", "norton street", "cumberland street"),
+        ("elmwood avenue", "mount hope", "south goodman"),
+    ]
+
+    if priority == 1:
+        segments = segments_i
+    elif priority == 2:
+        segments = segments_ii
+    else:
+        segments = segments_i + segments_ii
+
+    # We could probably eliminate the need to download carall here by refactoring get_street_segment.
+    # Should probably just refactor this whole thing into a class...
+    if carall is None:
+        carall = carall_from_polygon(ox.geocode_to_gdf("rochester, ny").geometry[0])
+    nodes = []
+    for street, src, dest in segments:
+        nodes += get_street_segment(carall, street, src, dest)
+
+    return carall.subgraph(set(nodes)).copy()
 
 
 def bike_infra_from_polygon(
