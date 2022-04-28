@@ -127,6 +127,11 @@ def route_node_pairs(G, GT, route_factor):
     GT_indices = set()
 
 
+    for e in G.es:
+        e["mod_weight"] = e["weight"] - e["weight"] * route_factor * int(
+            e["existing"] == True
+        )
+
     for poipair, poipair_distance in routenodepairs:
         poipair_ind = (G.vs.find(id=poipair[0]).index, G.vs.find(id=poipair[1]).index)
         sp = set(
@@ -223,7 +228,7 @@ def gt_with_existing_full(G_base, G_existing, route_factor=0, prune_factor=1, pr
     G_gen = gt_from_scratch(G_comb, pois_ids, route_factor, prune_factor,prune_measure = prune_measure)
     if((prune_measure == 'iter_betweenness') or (prune_measure == 'hybrid')):
         G_gen = iterative_pruning(G_gen,G_existing, prune_factor, by_factor)
-        print('here')
+
     G_nx = gu.ig_to_nx(G_gen)
     G_nx = gu.combine_nodes(G_nx, G_existing)
     G_nx = gu.combine_edges(G_nx, G_existing)
