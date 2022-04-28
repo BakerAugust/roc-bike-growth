@@ -78,6 +78,8 @@ target/
 .ipynb_checkpoints
 cache
 notebooks/cache
+*.png
+*.json
 
 # IPython
 profile_default/
