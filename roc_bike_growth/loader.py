@@ -1,12 +1,15 @@
+from distutils.command.config import config
 import osmnx as ox
 import networkx as nx
 import numpy as np
+import pandas as pd
 import geopandas as gpd
 from roc_bike_growth.settings import CONFIG
 from roc_bike_growth.graph_utils import get_street_segment
 from shapely.geometry import Polygon, MultiPolygon, LineString, Point
+from cenpy import products
 
-from typing import List, Union
+from typing import List, Union, Tuple
 
 
 def download_osm_POIs(
@@ -105,6 +108,69 @@ def POIs_from_file(filepath: str) -> gpd.GeoDataFrame:
     return gdf.assign(geometry=gdf["Address"].apply(address2point)).dropna(
         subset=["geometry"]
     )
+
+
+def _downsample_poi_nodes_by_income(
+    X: np.ndarray,
+    Y: np.ndarray,
+    county: str,
+    downsample_pct: float = 0.1,
+    income_cutoff_quantile: float = 0.25,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Downsamples POIs in wealthier areas using census data via cenpy. May
+    take a few minutes to download necessary census data.
+
+    Parameters
+    -------
+    X: np.ndarray
+        Array of x coordinates for POIs
+    Y: np.ndarray
+        Array of y coordinates for POIs
+    county: string
+        County, state for querying census data. E.x. "Monroe, NY".
+    downsample_pct: float
+        What pct of upper-income POIs to downsample. 0.1 would result in 90%
+        of higher-income POIs remaining and 100% of lower-income POIs.
+    income_cutoff_quantile: float
+        Quantile of median income by census tract to use for cutoff between
+        high and low income areas.
+
+    Returns
+    -------
+    (X,Y) : Tuple[np.ndarray, np.ndarray]
+    """
+    variables = {
+        "B07011_001E": "median_income_curr_res",  # EMdian income in the past 12 months by geographical mobility in the past year for current residence in the united states
+    }
+    income_df = (
+        products.ACS(2019)
+        .from_county(county, level="tract", variables=list(variables.keys()))
+        .to_crs("EPSG:4326")
+    )
+
+    poi_gdf = gpd.GeoDataFrame(
+        geometry=[Point(x, y) for x, y in zip(X, Y)], crs="EPSG:4326"
+    )
+    poi_with_income = poi_gdf.sjoin(
+        income_df[["GEOID", "geometry", CONFIG.median_income_var]],
+        how="left",
+        predicate="within",
+    )
+    income_cutoff = income_df[CONFIG.median_income_var].quantile(0.25)
+    upper_income = poi_with_income.query(
+        f"{CONFIG.median_income_var} > {income_cutoff}"
+    )
+    lower_income = poi_with_income.query(
+        f"{CONFIG.median_income_var} <= {income_cutoff}"
+    )
+    adjust_pois = pd.concat(
+        [lower_income, upper_income.sample(frac=(1 - downsample_pct), replace=False)]
+    )
+
+    X = list(adjust_pois.geometry.x)
+    Y = list(adjust_pois.geometry.y)
+    return X, Y
 
 
 def _fill_edge_geometry(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
@@ -307,7 +373,10 @@ def bike_infra_from_polygon(
 
 
 def carall_from_polygon(
-    polygon: Polygon, add_pois: bool = False, fill_edge_geometry: bool = True
+    polygon: Polygon,
+    add_pois: bool = False,
+    poi_downsample_pct: float = 0,
+    fill_edge_geometry: bool = True,
 ) -> nx.MultiDiGraph:
     """
     Downloads network of "driveable" roads
@@ -316,13 +385,12 @@ def carall_from_polygon(
     -------
     polygon: Polygon
         Shapely Polygon object to use as query boundary.
-
     add_pois: bool = False
         Flag to also tag nodes that are nearest to pois identified in `download_osm_POIs`.
-
+    poi_downsample_pct: float = 0
+        Percent of downsampling to apply to higher-income POIs.
     fill_edge_geometry: bool = True
         Flag to fill missing edge geometries. For edge (u,v), creates LineString from u to v.
-
     Returns
     -------
     driveable network within input polygon
@@ -347,6 +415,11 @@ def carall_from_polygon(
                 x, y = row["geometry"].coords[0]
                 X.append(x)
                 Y.append(y)
+
+            if poi_downsample_pct > 0:
+                X, Y = _downsample_poi_nodes_by_income(
+                    X, Y, "Monroe, NY", poi_downsample_pct
+                )
 
             poi_nodes = np.unique(ox.distance.nearest_nodes(G, X=X, Y=Y))
 

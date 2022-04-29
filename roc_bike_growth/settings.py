@@ -43,3 +43,5 @@ class CONFIG:
     }
 
     poi_filepath = "data/POIsRochester.csv"
+
+    median_income_var = "B07011_001E"
