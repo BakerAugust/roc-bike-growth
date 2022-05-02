@@ -2,6 +2,7 @@ import osmnx as ox
 import networkx as nx
 from typing import List, Dict
 import igraph as ig
+import numpy as np
 
 
 def get_intersections(
@@ -279,3 +280,31 @@ def ig_to_nx(G_ig: ig.Graph):
 
 def graph_union(G_1, G_2):
     return [0, 0, 0, 0]
+
+
+def graph_length_km(G) -> float:
+    """
+    Calculates total length of graph, counting bi-directional
+    edges (e.g. (u,v), (v,u)) only once.
+
+    Parameters
+    -------
+    G: MultiDiGraph
+        Graph with "length" attribute on all edges.
+
+    Returns
+    -------
+    length: float
+        Graph length in km
+    """
+    length_dict = nx.get_edge_attributes(G, "length")
+    unique_edges = np.unique(
+        [sorted(t, reverse=True) for t in length_dict.keys()], axis=0
+    )
+    total_length = 0
+    for e in unique_edges:
+        try:
+            total_length += length_dict[tuple(e)]
+        except KeyError as err:
+            total_length += length_dict[(e[1], e[0], e[2])]  # if error try reverse
+    return total_length / 1000
