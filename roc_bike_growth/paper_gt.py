@@ -61,7 +61,7 @@ def greedy_triangulation(GT, poipairs, prune_factor=1, route_factor = 0, prune_m
                 GT.vs.find(id=poipair[1]).index,
             )
         except:
-            print(poipair)
+            # print(poipair)
             for v in GT.vs:
                 print(v["id"])
 
@@ -78,7 +78,7 @@ def greedy_triangulation(GT, poipairs, prune_factor=1, route_factor = 0, prune_m
 
     # Get the measure for pruning
     
-    print(prune_measure)
+    # print(prune_measure)
     
     prune_quantile = prune_factor
     
@@ -103,8 +103,8 @@ def greedy_triangulation(GT, poipairs, prune_factor=1, route_factor = 0, prune_m
             GT.vs[c]["cc"] = CC[c]
         GT = GT.induced_subgraph(sub_nodes) 
         
-    elif prune_measure == "iter_betweenness":
-        print('here')
+    # elif prune_measure == "iter_betweenness":
+    #     print('here')
     
     return GT
 
@@ -262,7 +262,7 @@ def iterative_pruning(GT, existing, prune_factor, by_factor):
             
             factor = factor/2
             bf_index+=1
-        print('factor: ' + str(by_factors[bf_index]))
+        # print('factor: ' + str(by_factors[bf_index]))
         
         BW = GT.edge_betweenness(directed = True, weights = "mod_weight")
         
@@ -281,10 +281,10 @@ def iterative_pruning(GT, existing, prune_factor, by_factor):
             pos = list(np.where(np.array(BW) == min_value)[0])
             edges = [GT.es[i] for i in pos] + edges
         
-        print(len(edges))
+        # print(len(edges))
             
         GT.delete_edges(edges)
         
-    print(len(GT.es))
+    # print(len(GT.es))
     
     return GT
