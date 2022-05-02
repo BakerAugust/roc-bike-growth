@@ -1,5 +1,5 @@
 # roc-bike-growth
-Efficiently growing Rochester's bike networks. Inspired by (github.com/mszell/bikenwgrowth)[https://github.com/mszell/bikenwgrowth]
+Efficiently growing Rochester's bike networks. Inspired by [github.com/mszell/bikenwgrowth](https://github.com/mszell/bikenwgrowth)
 
 ![growth](growth.gif)
 
