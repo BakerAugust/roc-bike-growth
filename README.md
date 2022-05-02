@@ -1,5 +1,5 @@
 # roc-bike-growth
-Efficiently growing Rochester's bike networks
+Efficiently growing Rochester's bike networks. For the writeup on our work, checkout `roc-bike-growth writeup.pdf`.
 
 
 ## Using the Docker Environment
