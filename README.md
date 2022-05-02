@@ -1,6 +1,13 @@
 # roc-bike-growth
-Efficiently growing Rochester's bike networks. For the writeup on our work, checkout `roc-bike-growth writeup.pdf`.
+Efficiently growing Rochester's bike networks. 
 
+![growth](growth.gif)
+
+## Looking for methodology?
+For the writeup on our work, checkout `roc-bike-growth writeup.pdf`.
+
+## Looking for more maps?
+Checkout [bakeraugust.github.io/roc-bike-growth/](https://bakeraugust.github.io/roc-bike-growth/)
 
 ## Using the Docker Environment
 
